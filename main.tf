@@ -1,16 +1,10 @@
-terraform {
-  backend "s3" {
-    bucket = "sctp-ce5-tfstate-bucket-1"
-    key    = "ZhiYong.tfstate"
-    region = "us-east-1"
-  }
-}
-
-provider "aws" {
-  region = "us-east-1"
+# add this
+locals {
+  topic-name = "updates-topic"
 }
 
 #new sns topic
 resource "aws_sns_topic" "user_updates" {
-  name = "ZhiYong-updates-topic"
+  # change this
+  name = "var.abc"
 }
