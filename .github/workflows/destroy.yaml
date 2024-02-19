@@ -1,4 +1,4 @@
-name: Terraform CD
+name: Terraform Destroy
 
 on:
   workflow_dispatch:
@@ -46,3 +46,10 @@ jobs:
 #terraform apply
    - name: Terraform apply
      run: terraform apply --auto-approve -var-file="environments/${{ github.event.inputs.environment}}.tfvars"
+
+# Wait 10 minutes
+   - name: wait for 5 mins
+     run: sleep 300
+
+   - name: terraform destroy
+     run: terraform destroy --auto-approve -var-file="environments/${{ github.event.inputs.environment}}.tfvars"
