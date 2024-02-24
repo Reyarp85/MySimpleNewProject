@@ -14,42 +14,41 @@ on:
         - staging
         - prod
 
-# declare the running agent
 jobs:
- terraform-cd:
-   runs-on: ubuntu-latest
+  terraform-destroy:
+    runs-on: ubuntu-latest
 
-   steps:
-# git clone/git checkout
-   - name: Checkout repository
-     uses: actions/checkout@v2
+    steps:
+    ##setup
+        - name: Checkout repository
+          uses: actions/checkout@v2
+      
+    #aws configure
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: us-east-1 # or hardcode us-east-1
 
-#aws configure
-   - name: Configure AWS credentials
-     uses: aws-actions/configure-aws-credentials@v1
-     with:
-       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-       aws-region: us-east-1 # or hardcore us-east-1
+    #install terraform
+        - name: Set up Terraform
+          uses: hashicorp/setup-terraform@v1
 
-#install terraform
-   - name: Set up Terraform
-     uses: hashicorp/setup-terraform@v1
+    #terraform init
+        - name: Initialize Terraform
+          run: terraform init
 
-   - name: Terraform Lint
-     run: terraform fmt -recursive
-     
-#terraform init
-   - name: Initialize Terraform
-     run: terraform init
+    # View terraform workspaces
+        - name: Terraform workspace list
+          run: terraform workspace list
 
-#terraform apply
-   - name: Terraform apply
-     run: terraform apply --auto-approve -var-file="environments/${{ github.event.inputs.environment}}.tfvars"
+# Select terraform workspace
+        - name: Terraform workspace new environment and select
+          run: |
+            terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
+            terraform workspace list
 
-# Wait 10 minutes
-   - name: wait for 5 mins
-     run: sleep 300
-
-   - name: terraform destroy
-     run: terraform destroy --auto-approve -var-file="environments/${{ github.event.inputs.environment}}.tfvars"
+    # terraform destroy
+        - name: Terraform Destroy
+          run: terraform destroy --auto-approve -var-file="environments/${{ github.event.inputs.environment }}.tfvars"
