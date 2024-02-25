@@ -47,18 +47,18 @@ jobs:
      run: terraform workspace list
 
 # Select terraform workspace
-   - name: Terraform workspace new environments and select
+   - name: Terraform workspace new environment and select
      run: |
-       terraform workspace select ${{ github.event.inputs.environments }} || terraform workspace new ${{ github.event.inputs.environments }}
+       terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
        terraform workspace list
        
 #terraform apply
    - name: Terraform apply
-     run: terraform apply --auto-approve -var-file="environments/${{ github.event.inputs.environments }}.tfvars"
+     run: terraform apply --auto-approve -var-file="environment/${{ github.event.inputs.environment }}.tfvars"
      
 # Wait 10 minutes
   #  - name: wait for 5min
   #    run: sleep 300
 
   #  - name: terraform destroy
-  #    run: terraform destroy --auto-approve -var-file="environments/${{ github.event.inputs.environments }}.tfvars"
+  #    run: terraform destroy --auto-approve -var-file="environments/${{ github.event.inputs.environment }}.tfvars"

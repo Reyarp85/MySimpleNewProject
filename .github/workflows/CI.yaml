@@ -51,7 +51,7 @@ jobs:
 
 #terraform plan
    - name: Terraform Plan
-     run: terraform plan --var-file="environments/dev.tfvars"
+     run: terraform plan --var-file="environment/dev.tfvars"
 
 #terraform validate
    - name: Terraform validate
