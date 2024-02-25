@@ -45,9 +45,8 @@ jobs:
 
 # Select terraform workspace
         - name: Terraform workspace new environment and select
-          run: |
-            terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
-            terraform workspace list
+          run: terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
+               terraform workspace list
 
     # terraform destroy
         - name: Terraform Destroy
